@@ -18,7 +18,8 @@ services:
       SPLUNK_START_ARGS: --accept-license
       SPLUNK_PASSWORD: clouddetect_dev_2026
     volumes:
-      - ./splunk:/opt/splunk/etc/apps/clouddetect/local:ro
+      # Writable, not :ro - the image's first-boot provisioning chowns this dir.
+      - ./splunk:/opt/splunk/etc/apps/clouddetect/local
     healthcheck:
       test: ["CMD", "curl", "-fk", "https://localhost:8089/services/server/info"]
       interval: 10s
