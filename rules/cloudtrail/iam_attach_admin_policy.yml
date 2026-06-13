@@ -1,0 +1,26 @@
+title: IAM privilege escalation via AdministratorAccess attachment
+id: 6f4a8c1e-2b7d-4a90-9c11-9d3e2f0a51c7
+status: experimental
+description: >
+  An IAM principal attached the AWS-managed AdministratorAccess policy to a user.
+  Granting full administrative rights to a user is a common privilege-escalation
+  step after an initial compromise of lower-privileged credentials.
+references:
+  - https://attack.mitre.org/techniques/T1098/003/
+  - https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: iam.amazonaws.com
+    eventName: AttachUserPolicy
+    requestParameters.policyArn|endswith: ':policy/AdministratorAccess'
+  condition: selection
+falsepositives:
+  - Break-glass administrators provisioning a new operator account through an
+    approved change. Scope out the known admin-provisioning principals.
+level: high
+tags:
+  - attack.privilege-escalation
+  - attack.t1098.003

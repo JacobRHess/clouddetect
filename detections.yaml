@@ -1,0 +1,17 @@
+# Single source of truth. The harness, the CLI, the test suite and the ATT&CK
+# doc are all generated from or checked against this file. Adding a detection
+# means adding an entry here plus a Sigma rule and two fixtures (one attack,
+# one benign) - nothing else.
+version: 1
+
+detections:
+  - id: iam-attach-admin-policy
+    title: IAM privilege escalation via AdministratorAccess attachment
+    logsource: cloudtrail
+    rule: rules/cloudtrail/iam_attach_admin_policy.yml
+    attack: [T1098.003]
+    fixtures:
+      - events: fixtures/cloudtrail/iam_attach_admin_policy.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/iam_attach_admin_policy.benign.json
+        expect: clean

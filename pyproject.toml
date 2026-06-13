@@ -1,0 +1,95 @@
+[project]
+name = "clouddetect"
+version = "0.1.0"
+description = "Cloud and identity detections shipped with the logs that prove they fire"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jacob Hess" }]
+dependencies = [
+    "pyyaml>=6.0",
+    "pysigma>=0.11",
+    "pysigma-backend-splunk>=1.1",
+    "pysigma-backend-elasticsearch>=1.1",
+    "requests>=2.32",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "types-PyYAML>=6.0",
+    "types-requests>=2.32",
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+]
+
+[project.scripts]
+clouddetect = "clouddetect.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/clouddetect"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "B", "UP", "SIM", "PTH", "RUF",
+    "S",     # bandit-style security checks
+    "TRY",   # raise/exception style
+    "C4",    # comprehension hygiene
+    "A",     # builtin shadowing
+    "PT",    # pytest style
+    "RET",   # return-statement hygiene
+    "ICN",   # import conventions
+    "ERA",   # commented-out code
+]
+ignore = [
+    # The manifest validator and the engine clients exist to turn opaque
+    # failures into contextual messages; a one-shot exception subclass per
+    # message would be worse than the inline string.
+    "TRY003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # asserts are how pytest works
+
+[tool.bandit]
+# requests is the transport for both engine clients. URLs are built from
+# confined config, no shell, no untrusted strings. TLS verification is a
+# documented, env-gated choice for the self-signed local lab (see clients).
+skips = []
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/clouddetect"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+# The engine clients are exercised by the CI validate job against real
+# Splunk and OpenSearch. Mocking the transport to chase a unit-coverage
+# number here would hide the failures the replay job exists to catch.
+omit = ["src/clouddetect/splunk.py", "src/clouddetect/opensearch.py"]
+fail_under = 90
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "replay: requires a live Splunk and OpenSearch (CI validate job)",
+]
