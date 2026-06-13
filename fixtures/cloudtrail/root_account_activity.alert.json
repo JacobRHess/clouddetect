@@ -1,0 +1,27 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "Root",
+      "principalId": "111122223333",
+      "arn": "arn:aws:iam::111122223333:root",
+      "accountId": "111122223333"
+    },
+    "eventTime": "2026-06-12T03:47:18Z",
+    "eventSource": "ec2.amazonaws.com",
+    "eventName": "RunInstances",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "203.0.113.91",
+    "userAgent": "aws-cli/2.15.0 Python/3.12.1 Linux/6.5.0",
+    "requestParameters": {
+      "instancesSet": {"items": [{"imageId": "ami-0abcdef1234567890", "minCount": 1, "maxCount": 1}]},
+      "instanceType": "c5.4xlarge"
+    },
+    "responseElements": {"instancesSet": {"items": [{"instanceId": "i-0123456789abcdef0"}]}},
+    "eventID": "a8b9c0d1-ffff-aaaa-bbbb-567890abcdef",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]

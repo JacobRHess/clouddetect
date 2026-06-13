@@ -1,0 +1,27 @@
+title: Root account used for a mutating action
+id: 9a0b1c2d-3e4f-4a5b-8c6d-7e8f9a0b1c2d
+status: experimental
+description: >
+  The AWS account root identity performed a write action. Root should be locked
+  away behind MFA and used almost never; a state-changing call by root is either
+  a serious operational smell or an attacker using recovered root credentials.
+references:
+  - https://attack.mitre.org/techniques/T1078/004/
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    userIdentity.type: Root
+  filter_readonly:
+    readOnly: true
+  filter_automated:
+    eventType: AwsServiceEvent
+  condition: selection and not filter_readonly and not filter_automated
+falsepositives:
+  - The handful of tasks that genuinely require root (closing the account,
+    changing the support plan). Scope those event names out.
+level: high
+tags:
+  - attack.privilege-escalation
+  - attack.t1078.004

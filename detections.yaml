@@ -15,3 +15,47 @@ detections:
         expect: alert
       - events: fixtures/cloudtrail/iam_attach_admin_policy.benign.json
         expect: clean
+
+  - id: cloudtrail-logging-disabled
+    title: CloudTrail logging disabled or deleted
+    logsource: cloudtrail
+    rule: rules/cloudtrail/cloudtrail_logging_disabled.yml
+    attack: [T1562.008]
+    fixtures:
+      - events: fixtures/cloudtrail/cloudtrail_logging_disabled.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/cloudtrail_logging_disabled.benign.json
+        expect: clean
+
+  - id: guardduty-disabled
+    title: GuardDuty detector disabled or members removed
+    logsource: cloudtrail
+    rule: rules/cloudtrail/guardduty_disabled.yml
+    attack: [T1562.008]
+    fixtures:
+      - events: fixtures/cloudtrail/guardduty_disabled.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/guardduty_disabled.benign.json
+        expect: clean
+
+  - id: root-account-activity
+    title: Root account used for a mutating action
+    logsource: cloudtrail
+    rule: rules/cloudtrail/root_account_activity.yml
+    attack: [T1078.004]
+    fixtures:
+      - events: fixtures/cloudtrail/root_account_activity.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/root_account_activity.benign.json
+        expect: clean
+
+  - id: iam-login-profile-created
+    title: Console login profile created for an IAM user
+    logsource: cloudtrail
+    rule: rules/cloudtrail/iam_login_profile_created.yml
+    attack: [T1098]
+    fixtures:
+      - events: fixtures/cloudtrail/iam_login_profile_created.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/iam_login_profile_created.benign.json
+        expect: clean

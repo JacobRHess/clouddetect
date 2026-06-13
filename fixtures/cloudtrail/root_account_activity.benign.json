@@ -1,0 +1,50 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "IAMUser",
+      "principalId": "AIDA1EXAMPLE0PLATFORM",
+      "arn": "arn:aws:iam::111122223333:user/platform-admin",
+      "accountId": "111122223333",
+      "userName": "platform-admin"
+    },
+    "eventTime": "2026-06-12T13:20:05Z",
+    "eventSource": "ec2.amazonaws.com",
+    "eventName": "RunInstances",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "198.51.100.20",
+    "userAgent": "aws-cli/2.15.0 Python/3.12.1 Linux/6.5.0",
+    "requestParameters": {
+      "instancesSet": {"items": [{"imageId": "ami-0abcdef1234567890", "minCount": 1, "maxCount": 1}]},
+      "instanceType": "t3.small"
+    },
+    "responseElements": {"instancesSet": {"items": [{"instanceId": "i-0fedcba9876543210"}]}},
+    "eventID": "b9c0d1e2-aaaa-bbbb-cccc-67890abcdef0",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  },
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "Root",
+      "principalId": "111122223333",
+      "arn": "arn:aws:iam::111122223333:root",
+      "accountId": "111122223333"
+    },
+    "eventTime": "2026-06-12T13:25:44Z",
+    "eventSource": "signin.amazonaws.com",
+    "eventName": "GetAccountSummary",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "198.51.100.20",
+    "userAgent": "console.amazonaws.com",
+    "requestParameters": null,
+    "responseElements": null,
+    "eventID": "c0d1e2f3-bbbb-cccc-dddd-7890abcdef01",
+    "readOnly": true,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]

@@ -1,0 +1,26 @@
+title: GuardDuty detector disabled or members removed
+id: 7e1c2a4b-5d36-4f80-9b12-3a4c5d6e7f80
+status: experimental
+description: >
+  A GuardDuty detector was deleted or member accounts were detached. Tearing
+  down GuardDuty removes the account's managed threat detection and is a strong
+  defense-evasion signal when it is not part of a planned change.
+references:
+  - https://attack.mitre.org/techniques/T1562/008/
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: guardduty.amazonaws.com
+    eventName:
+      - DeleteDetector
+      - StopMonitoringMembers
+      - DisassociateMembers
+  condition: selection
+falsepositives:
+  - Tearing down GuardDuty in a sandbox account being decommissioned.
+level: high
+tags:
+  - attack.defense-evasion
+  - attack.t1562.008

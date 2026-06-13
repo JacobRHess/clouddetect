@@ -1,0 +1,25 @@
+title: Console login profile created for an IAM user
+id: 4c5d6e7f-8a9b-4c0d-9e1f-2a3b4c5d6e7f
+status: experimental
+description: >
+  A console password (login profile) was created for an IAM user. After
+  compromising programmatic keys, an attacker often adds a console login profile
+  to a user to gain interactive access and a more durable foothold.
+references:
+  - https://attack.mitre.org/techniques/T1098/
+  - https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateLoginProfile.html
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: iam.amazonaws.com
+    eventName: CreateLoginProfile
+  condition: selection
+falsepositives:
+  - Onboarding a human operator who legitimately needs console access. Scope out
+    the approved identity-provisioning principals.
+level: medium
+tags:
+  - attack.persistence
+  - attack.t1098

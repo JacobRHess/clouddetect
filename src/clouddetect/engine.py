@@ -25,9 +25,13 @@ from clouddetect.manifest import Detection, LogSource
 from clouddetect.opensearch import OpenSearchClient
 from clouddetect.splunk import SplunkClient
 
-# Splunk sourcetype per log family. `_json` so Splunk applies search-time JSON
-# field extraction automatically; the rules reference the raw nested field paths.
-_SPLUNK_SOURCETYPE = {LogSource.CLOUDTRAIL: "_json", LogSource.OKTA: "_json"}
+# Splunk sourcetype per log family. The lab's props.conf sets KV_MODE=json on
+# both so the nested CloudTrail and Okta fields the rules reference are
+# extracted at search time.
+_SPLUNK_SOURCETYPE = {
+    LogSource.CLOUDTRAIL: "aws:cloudtrail",
+    LogSource.OKTA: "okta:system",
+}
 
 
 class EngineError(RuntimeError):

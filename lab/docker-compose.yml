@@ -1,0 +1,43 @@
+# Local lab: a single-node Splunk and a single-node OpenSearch, the same two
+# engines the CI validate job boots. Bring it up, then `uv run pytest -m replay`
+# replays every fixture through both.
+#
+#   docker compose -f lab/docker-compose.yml up -d
+#
+# Splunk listens on 8000 (web), 8088 (HEC), 8089 (REST). OpenSearch on 9200.
+# Both run with throwaway dev credentials; nothing here is a secret.
+services:
+  splunk:
+    image: splunk/splunk:9.4.2
+    container_name: cd-splunk
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+      - "8089:8089"
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: clouddetect_dev_2026
+    volumes:
+      - ./splunk:/opt/splunk/etc/apps/clouddetect/local:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "https://localhost:8089/services/server/info"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  opensearch:
+    image: opensearchproject/opensearch:2.18.0
+    container_name: cd-opensearch
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+      bootstrap.memory_lock: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30

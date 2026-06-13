@@ -1,0 +1,30 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "IAMUser",
+      "principalId": "AIDA1EXAMPLE0ATTACKER",
+      "arn": "arn:aws:iam::111122223333:user/dev-intern",
+      "accountId": "111122223333",
+      "userName": "dev-intern"
+    },
+    "eventTime": "2026-06-12T18:40:27Z",
+    "eventSource": "iam.amazonaws.com",
+    "eventName": "CreateLoginProfile",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "203.0.113.77",
+    "userAgent": "aws-cli/2.15.0 Python/3.12.1 Linux/6.5.0",
+    "requestParameters": {
+      "userName": "svc-backups",
+      "passwordResetRequired": false
+    },
+    "responseElements": {
+      "loginProfile": {"userName": "svc-backups", "createDate": "Jun 12, 2026 6:40:27 PM"}
+    },
+    "eventID": "d1e2f3a4-cccc-dddd-eeee-890abcdef012",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]

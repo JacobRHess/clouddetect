@@ -89,7 +89,9 @@ fail_under = 90
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+# The default run is the offline gate: deselect the replay tests that need live
+# engines. The CI validate job (and the local lab) opt back in with `-m replay`.
+addopts = '-ra -m "not replay"'
 markers = [
     "replay: requires a live Splunk and OpenSearch (CI validate job)",
 ]

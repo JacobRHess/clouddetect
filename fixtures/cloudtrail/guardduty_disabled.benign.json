@@ -1,0 +1,24 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "AssumedRole",
+      "principalId": "AROA1EXAMPLE0SECOPS:secops-audit",
+      "arn": "arn:aws:sts::111122223333:assumed-role/secops-audit/secops-audit",
+      "accountId": "111122223333"
+    },
+    "eventTime": "2026-06-12T11:15:30Z",
+    "eventSource": "guardduty.amazonaws.com",
+    "eventName": "ListDetectors",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "198.51.100.20",
+    "userAgent": "aws-sdk-go/1.50.0",
+    "requestParameters": null,
+    "responseElements": null,
+    "eventID": "f7a8b9c0-eeee-ffff-aaaa-4567890abcde",
+    "readOnly": true,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]

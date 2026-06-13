@@ -1,0 +1,27 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "IAMUser",
+      "principalId": "AIDA1EXAMPLE0PLATFORM",
+      "arn": "arn:aws:iam::111122223333:user/platform-admin",
+      "accountId": "111122223333",
+      "userName": "platform-admin"
+    },
+    "eventTime": "2026-06-12T10:11:53Z",
+    "eventSource": "iam.amazonaws.com",
+    "eventName": "GetLoginProfile",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "198.51.100.20",
+    "userAgent": "aws-cli/2.15.0 Python/3.12.1 Linux/6.5.0",
+    "requestParameters": {
+      "userName": "svc-backups"
+    },
+    "responseElements": null,
+    "eventID": "e2f3a4b5-dddd-eeee-ffff-90abcdef0123",
+    "readOnly": true,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]

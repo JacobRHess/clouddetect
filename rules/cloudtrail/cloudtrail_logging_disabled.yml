@@ -1,0 +1,25 @@
+title: CloudTrail logging disabled or deleted
+id: 2d8b6f3a-9c14-4e57-8a21-7b6c0d5e4f12
+status: experimental
+description: >
+  A CloudTrail trail was stopped or deleted. Disabling the audit log is a common
+  defense-evasion step that blinds detections downstream of CloudTrail, and is
+  rarely a routine operation in a healthy account.
+references:
+  - https://attack.mitre.org/techniques/T1562/008/
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: cloudtrail.amazonaws.com
+    eventName:
+      - StopLogging
+      - DeleteTrail
+  condition: selection
+falsepositives:
+  - Decommissioning a trail as part of an approved logging-pipeline change.
+level: high
+tags:
+  - attack.defense-evasion
+  - attack.t1562.008
