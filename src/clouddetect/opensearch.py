@@ -16,7 +16,7 @@ import json
 import os
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 import requests
 
@@ -67,9 +67,34 @@ class OpenSearchClient:
             time.sleep(delay)
         raise OpenSearchError(f"OpenSearch not ready after {attempts} attempts")
 
+    # Map every string field as keyword, not analyzed text. A SIEM treats log
+    # fields as exact values; OpenSearch's default text analysis would tokenize
+    # `arn:aws:iam::aws:policy/AdministratorAccess` on `:` and `/`, so an
+    # endswith wildcard from a Sigma rule would never match a whole token. This
+    # mapping makes OpenSearch behave like the field store a detection expects -
+    # and like Splunk, so a rule that fires on one fires on the other.
+    _MAPPING: ClassVar[dict[str, Any]] = {
+        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
+        "mappings": {
+            "dynamic_templates": [
+                {
+                    "strings_as_keyword": {
+                        "match_mapping_type": "string",
+                        "mapping": {"type": "keyword", "ignore_above": 32766},
+                    }
+                }
+            ]
+        },
+    }
+
     def index_events(self, index: str, events: list[dict[str, Any]]) -> int:
-        """Bulk-index events into a fresh index and refresh so they're searchable."""
+        """Bulk-index events into a fresh keyword-mapped index, refreshed for search."""
         self._request("DELETE", f"/{index}")  # best effort; ignore 404
+        created = self._request("PUT", f"/{index}", json=self._MAPPING)
+        if created.status_code not in (200, 201):
+            raise OpenSearchError(
+                f"create index returned {created.status_code}: {created.text[:200]}"
+            )
         lines: list[str] = []
         for event in events:
             lines.append(json.dumps({"index": {}}))
