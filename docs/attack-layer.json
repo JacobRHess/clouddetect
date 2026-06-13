@@ -23,10 +23,24 @@
       "enabled": true
     },
     {
-      "techniqueID": "T1098.003",
+      "techniqueID": "T1098.001",
       "score": 1,
       "color": "#1f6feb",
-      "comment": "iam-attach-admin-policy",
+      "comment": "okta-api-token-created",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1098.003",
+      "score": 2,
+      "color": "#1f6feb",
+      "comment": "iam-attach-admin-policy, okta-super-admin-granted",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1556.006",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "okta-mfa-factor-reset",
       "enabled": true
     },
     {

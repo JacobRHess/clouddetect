@@ -1,0 +1,26 @@
+[
+  {
+    "uuid": "d4e5f6a7-4444-5555-6666-ddddeeeeffff",
+    "published": "2026-06-12T19:02:41.108Z",
+    "eventType": "user.mfa.factor.deactivate",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Reset factor for user",
+    "actor": {
+      "id": "00u1example0intern",
+      "type": "User",
+      "alternateId": "dev-intern@example.com",
+      "displayName": "Dev Intern"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Windows 10", "browser": "FIREFOX"},
+      "ipAddress": "203.0.113.77",
+      "geographicalContext": {"city": "Reykjavik", "country": "Iceland"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "target": [
+      {"id": "00u1example0cfo", "type": "User", "alternateId": "cfo@example.com", "displayName": "Chief Finance Officer"},
+      {"id": "opf1examplefactor", "type": "OktaVerify", "alternateId": "unknown", "displayName": "Okta Verify"}
+    ]
+  }
+]

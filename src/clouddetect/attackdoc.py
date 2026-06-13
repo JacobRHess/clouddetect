@@ -21,7 +21,9 @@ from clouddetect.manifest import load
 TECHNIQUE_NAMES = {
     "T1078.004": "Valid Accounts: Cloud Accounts",
     "T1098": "Account Manipulation",
+    "T1098.001": "Account Manipulation: Additional Cloud Credentials",
     "T1098.003": "Account Manipulation: Additional Cloud Roles",
+    "T1556.006": "Modify Authentication Process: Multi-Factor Authentication",
     "T1562.008": "Impair Defenses: Disable or Modify Cloud Logs",
 }
 

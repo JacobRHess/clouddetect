@@ -1,0 +1,51 @@
+[
+  {
+    "uuid": "a7b8c9d0-7777-8888-9999-aaaabbbbcccc",
+    "published": "2026-06-12T10:45:30.114Z",
+    "eventType": "user.account.privilege.grant",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Grant user privilege",
+    "actor": {
+      "id": "00u1example0platform",
+      "type": "User",
+      "alternateId": "platform-admin@example.com",
+      "displayName": "Platform Admin"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Mac OS X", "browser": "CHROME"},
+      "ipAddress": "198.51.100.20",
+      "geographicalContext": {"city": "Seattle", "country": "United States"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "debugContext": {
+      "debugData": {"privilegeGranted": "Read-only administrator"}
+    },
+    "target": [
+      {"id": "00u1example0analyst", "type": "User", "alternateId": "analyst@example.com", "displayName": "Security Analyst"}
+    ]
+  },
+  {
+    "uuid": "b8c9d0e1-8888-9999-0000-bbbbccccdddd",
+    "published": "2026-06-12T10:50:12.660Z",
+    "eventType": "group.user_membership.add",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Add user to group membership",
+    "actor": {
+      "id": "00u1example0platform",
+      "type": "User",
+      "alternateId": "platform-admin@example.com",
+      "displayName": "Platform Admin"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Mac OS X", "browser": "CHROME"},
+      "ipAddress": "198.51.100.20",
+      "geographicalContext": {"city": "Seattle", "country": "United States"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "target": [
+      {"id": "00g1examplegroup", "type": "UserGroup", "alternateId": "unknown", "displayName": "Engineering"}
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+title: Okta Super Administrator role granted
+id: 6d3b8e4f-9c52-4a13-8e27-3f4a5b6c7d8e
+status: experimental
+description: >
+  A user was granted the Okta Super Administrator role. Super admin is the
+  highest privilege in the tenant; an unexpected grant is a strong
+  privilege-escalation signal following an account compromise.
+references:
+  - https://attack.mitre.org/techniques/T1098/003/
+logsource:
+  product: okta
+  service: okta
+detection:
+  selection:
+    eventType: user.account.privilege.grant
+    debugContext.debugData.privilegeGranted|contains: 'Super administrator'
+  condition: selection
+falsepositives:
+  - A planned promotion of an operator to super admin through an approved change.
+level: high
+tags:
+  - attack.privilege-escalation
+  - attack.t1098.003
