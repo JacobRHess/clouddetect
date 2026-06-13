@@ -94,7 +94,7 @@ jobs:
             -p 8088:8088 -p 8089:8089 \
             -e SPLUNK_START_ARGS=--accept-license \
             -e SPLUNK_PASSWORD="$CD_SPLUNK_PASSWORD" \
-            -v "$PWD/lab/splunk:/opt/splunk/etc/apps/clouddetect/local:ro" \
+            -v "$PWD/lab/splunk:/opt/splunk/etc/apps/clouddetect/local" \
             splunk/splunk:9.4.2@sha256:4f798b8dfa75512c5b69b4f162c686e7b194e980559dd40fed78aadc417381be
 
       - name: Wait for OpenSearch
