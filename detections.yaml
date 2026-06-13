@@ -60,6 +60,39 @@ detections:
       - events: fixtures/cloudtrail/iam_login_profile_created.benign.json
         expect: clean
 
+  - id: iam-user-added-to-admin-group
+    title: IAM user added to an administrator group
+    logsource: cloudtrail
+    rule: rules/cloudtrail/iam_user_added_to_admin_group.yml
+    attack: [T1098.003]
+    fixtures:
+      - events: fixtures/cloudtrail/iam_user_added_to_admin_group.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/iam_user_added_to_admin_group.benign.json
+        expect: clean
+
+  - id: kms-key-scheduled-deletion
+    title: KMS key scheduled for deletion
+    logsource: cloudtrail
+    rule: rules/cloudtrail/kms_key_scheduled_deletion.yml
+    attack: [T1485]
+    fixtures:
+      - events: fixtures/cloudtrail/kms_key_scheduled_deletion.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/kms_key_scheduled_deletion.benign.json
+        expect: clean
+
+  - id: aws-config-recorder-stopped
+    title: AWS Config recording stopped or deleted
+    logsource: cloudtrail
+    rule: rules/cloudtrail/aws_config_recorder_stopped.yml
+    attack: [T1562.008]
+    fixtures:
+      - events: fixtures/cloudtrail/aws_config_recorder_stopped.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/aws_config_recorder_stopped.benign.json
+        expect: clean
+
   - id: okta-api-token-created
     title: Okta API token created
     logsource: okta

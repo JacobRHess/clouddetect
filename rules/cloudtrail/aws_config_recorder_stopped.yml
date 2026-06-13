@@ -1,0 +1,26 @@
+title: AWS Config recording stopped or deleted
+id: 9a6e1b7c-3d84-4f05-9c29-6d7e8f9a0b12
+status: experimental
+description: >
+  AWS Config recording was stopped, or a configuration recorder or delivery
+  channel was deleted. Config is a primary source of resource-change history;
+  turning it off blinds change-tracking and is a defense-evasion move.
+references:
+  - https://attack.mitre.org/techniques/T1562/008/
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: config.amazonaws.com
+    eventName:
+      - StopConfigurationRecorder
+      - DeleteConfigurationRecorder
+      - DeleteDeliveryChannel
+  condition: selection
+falsepositives:
+  - Rebuilding the Config setup during an approved logging-pipeline migration.
+level: high
+tags:
+  - attack.defense-evasion
+  - attack.t1562.008

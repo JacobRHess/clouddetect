@@ -1,0 +1,26 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "AssumedRole",
+      "principalId": "AROA1EXAMPLE0PLATFORM:config-admin",
+      "arn": "arn:aws:sts::111122223333:assumed-role/config-admin/config-admin",
+      "accountId": "111122223333"
+    },
+    "eventTime": "2026-06-12T07:05:19Z",
+    "eventSource": "config.amazonaws.com",
+    "eventName": "StartConfigurationRecorder",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "10.0.4.20",
+    "userAgent": "aws-sdk-go/1.50.0",
+    "requestParameters": {
+      "configurationRecorderName": "default"
+    },
+    "responseElements": null,
+    "eventID": "e8f9a0b1-dddd-eeee-ffff-def012345678",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]
