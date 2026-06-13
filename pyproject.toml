@@ -67,10 +67,12 @@ ignore = [
 "tests/*" = ["S101"]  # asserts are how pytest works
 
 [tool.bandit]
-# requests is the transport for both engine clients. URLs are built from
-# confined config, no shell, no untrusted strings. TLS verification is a
-# documented, env-gated choice for the self-signed local lab (see clients).
-skips = []
+# B404/B603: the live loop drives the stratus binary with argument lists, no
+# shell, and no untrusted strings in argv. The S404/S603 ruff noqa next to that
+# call document the same thing. requests is the transport for the engine
+# clients; URLs are built from confined config and TLS verification is a
+# documented, env-gated choice for the self-signed local lab.
+skips = ["B404", "B603"]
 
 [tool.mypy]
 python_version = "3.11"
