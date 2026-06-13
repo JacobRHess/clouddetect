@@ -1,0 +1,19 @@
+[extend]
+useDefault = true
+
+# These are not secrets: they configure an ephemeral Splunk and OpenSearch that
+# exist only for a local `docker compose up` or a CI run, are never exposed, and
+# are thrown away after. They live in the repo on purpose so the lab is
+# reproducible.
+[allowlist]
+description = "Lab-only, non-secret dev credentials for ephemeral engines"
+regexes = [
+  '''clouddetect_dev_2026''',
+  '''00000000-0000-0000-0000-000000000000''',
+  '''changeme''',
+]
+paths = [
+  '''lab/splunk/inputs\.conf''',
+  '''lab/docker-compose\.yml''',
+  '''src/clouddetect/splunk\.py''',
+]
