@@ -42,6 +42,5 @@ def test_fixture_behaves_as_declared(
 ) -> None:
     verdict = evaluate(detection, fixture, engine)
     assert verdict.passed, (
-        f"{detection.id} on {engine.name}: {fixture.name} {verdict.detail} "
-        f"(fired={verdict.fired})"
+        f"{detection.id} on {engine.name}: {fixture.name} {verdict.detail} (fired={verdict.fired})"
     )

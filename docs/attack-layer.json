@@ -1,0 +1,55 @@
+{
+  "name": "clouddetect coverage",
+  "description": "Cloud and identity detections proven against Splunk and OpenSearch.",
+  "domain": "enterprise-attack",
+  "versions": {
+    "attack": "16",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "techniques": [
+    {
+      "techniqueID": "T1078.004",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "root-account-activity",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1098",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "iam-login-profile-created",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1098.003",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "iam-attach-admin-policy",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1562.008",
+      "score": 2,
+      "color": "#1f6feb",
+      "comment": "cloudtrail-logging-disabled, guardduty-disabled",
+      "enabled": true
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#ffffff",
+      "#1f6feb"
+    ],
+    "minValue": 0,
+    "maxValue": 3
+  },
+  "legendItems": [
+    {
+      "label": "covered by a clouddetect detection",
+      "color": "#1f6feb"
+    }
+  ],
+  "hideDisabled": false
+}

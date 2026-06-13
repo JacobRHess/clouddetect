@@ -81,10 +81,15 @@ source = ["src/clouddetect"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = false
-# The engine clients are exercised by the CI validate job against real
-# Splunk and OpenSearch. Mocking the transport to chase a unit-coverage
-# number here would hide the failures the replay job exists to catch.
-omit = ["src/clouddetect/splunk.py", "src/clouddetect/opensearch.py"]
+# The engine clients and the engine wrappers around them are exercised by the
+# CI validate job against real Splunk and OpenSearch. Mocking the transport to
+# chase a unit-coverage number here would hide the failures the replay job
+# exists to catch.
+omit = [
+    "src/clouddetect/splunk.py",
+    "src/clouddetect/opensearch.py",
+    "src/clouddetect/engine.py",
+]
 fail_under = 90
 
 [tool.pytest.ini_options]

@@ -44,6 +44,14 @@ jobs:
         # this repo's own rules, so no untrusted input reaches diskcache.
         # Documented in SECURITY.md; drop the ignore when a fix ships.
         run: uv run pip-audit --skip-editable --ignore-vuln CVE-2025-69872
+      - name: ATT&CK doc is generated, not hand-edited
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv run python -m clouddetect.attackdoc > docs/ATTACK.md
+          uv run clouddetect attack --layer docs/attack-layer.json
+          git diff --exit-code -- docs/ATTACK.md docs/attack-layer.json \
+            || (echo "::error::docs drifted from the manifest; regenerate them" && exit 1)
       - name: Unit tests with coverage gate
         run: uv run pytest -q --cov
 
