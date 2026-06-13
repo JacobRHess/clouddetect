@@ -56,7 +56,13 @@ the loop end to end: it runs [Stratus Red Team](https://github.com/DataDog/strat
 against a dedicated AWS sandbox, pulls the CloudTrail events the attack actually
 produced, replays them through the same detections, and shows them fire on real
 attacker telemetry rather than a hand-built sample. This path needs AWS
-credentials and is never run in CI. See `docs/`.
+credentials and is never run in CI — see [docs/LIVE-LOOP.md](docs/LIVE-LOOP.md).
+
+```bash
+uv sync --extra live
+uv run clouddetect detonate --list
+uv run clouddetect detonate aws.defense-evasion.cloudtrail-stop
+```
 
 ## Running it
 

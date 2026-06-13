@@ -100,6 +100,39 @@ def _cmd_attack(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_detonate(args: argparse.Namespace) -> int:  # pragma: no cover - live AWS loop
+    from clouddetect import live
+    from clouddetect.engine import Engine, OpenSearchEngine, SplunkEngine
+
+    if args.list:
+        for technique, detection in sorted(live.STRATUS_MAP.items()):
+            print(f"{technique}\n  -> {detection}")
+        return 0
+    if args.technique is None:
+        print("a technique is required (see --list)", file=sys.stderr)
+        return 2
+
+    engines: tuple[Engine, ...] = (SplunkEngine(), OpenSearchEngine())
+    for engine in engines:
+        engine.wait_ready()
+    try:
+        result = live.detonate(
+            args.technique, engines, region=args.region, keep=args.keep, timeout=args.timeout
+        )
+    except (live.LiveError, live.StratusError) as exc:
+        print(f"detonate failed: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"technique {result.technique} -> detection {result.detection_id}")
+    print(f"pulled {result.event_count} real CloudTrail events")
+    ok = True
+    for engine_name, fired in result.fired.items():
+        print(f"  {engine_name:<11} {'FIRED' if fired else 'did NOT fire'}")
+        ok = ok and fired
+    print("detection held on real attacker telemetry" if ok else "detection MISSED real telemetry")
+    return 0 if ok else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="clouddetect", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -123,6 +156,16 @@ def build_parser() -> argparse.ArgumentParser:
     atk = sub.add_parser("attack", help="print the ATT&CK doc, or write the Navigator layer")
     atk.add_argument("--layer", type=Path, help="write the Navigator layer JSON here")
     atk.set_defaults(func=_cmd_attack)
+
+    det = sub.add_parser(
+        "detonate", help="live loop: detonate a real attack and replay its CloudTrail"
+    )
+    det.add_argument("technique", nargs="?", help="Stratus Red Team technique id")
+    det.add_argument("--list", action="store_true", help="list supported techniques and exit")
+    det.add_argument("--region", help="AWS region (default: the environment's)")
+    det.add_argument("--keep", action="store_true", help="skip stratus cleanup afterwards")
+    det.add_argument("--timeout", type=int, default=900, help="seconds to wait for CloudTrail")
+    det.set_defaults(func=_cmd_detonate)
 
     return parser
 
