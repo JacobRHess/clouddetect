@@ -1,0 +1,26 @@
+[
+  {
+    "uuid": "e5f6a7b8-5555-6666-7777-eeeeffffaaaa",
+    "published": "2026-06-12T09:30:18.553Z",
+    "eventType": "user.mfa.factor.activate",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Activate factor for user",
+    "actor": {
+      "id": "00u1example0newhire",
+      "type": "User",
+      "alternateId": "new-hire@example.com",
+      "displayName": "New Hire"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "iOS", "browser": "SAFARI"},
+      "ipAddress": "198.51.100.44",
+      "geographicalContext": {"city": "Austin", "country": "United States"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "target": [
+      {"id": "00u1example0newhire", "type": "User", "alternateId": "new-hire@example.com", "displayName": "New Hire"},
+      {"id": "opf1examplefactor2", "type": "OktaVerify", "alternateId": "unknown", "displayName": "Okta Verify"}
+    ]
+  }
+]

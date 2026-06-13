@@ -1,0 +1,25 @@
+title: Okta MFA factor reset or deactivated
+id: 5c2a7d3e-8b41-4f02-9d16-2e3f4a5b6c7d
+status: experimental
+description: >
+  An enrolled MFA factor was deactivated or all of a user's factors were reset.
+  An attacker who controls an account often strips its MFA so they can re-enroll
+  a factor they own, or clears a target's factors as a precursor to takeover.
+references:
+  - https://attack.mitre.org/techniques/T1556/006/
+logsource:
+  product: okta
+  service: okta
+detection:
+  selection:
+    eventType:
+      - user.mfa.factor.deactivate
+      - user.mfa.factor.reset_all
+  condition: selection
+falsepositives:
+  - Help desk resetting a factor for a user who lost a device, through an
+    approved verification process.
+level: high
+tags:
+  - attack.credential-access
+  - attack.t1556.006

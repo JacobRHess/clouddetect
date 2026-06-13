@@ -1,0 +1,25 @@
+title: Okta API token created
+id: 3b1f6c2d-7a48-4e91-bc05-1d2e3f4a5b6c
+status: experimental
+description: >
+  An Okta API token was created. API tokens carry the privileges of the user
+  who minted them and are a durable, MFA-free credential, so creating one is a
+  common persistence move after an account takeover.
+references:
+  - https://attack.mitre.org/techniques/T1098/001/
+  - https://developer.okta.com/docs/reference/api/system-log/
+logsource:
+  product: okta
+  service: okta
+detection:
+  selection:
+    eventType: system.api_token.create
+    outcome.result: SUCCESS
+  condition: selection
+falsepositives:
+  - An administrator or CI pipeline provisioning a token through an approved
+    process. Scope out the known automation actors.
+level: medium
+tags:
+  - attack.persistence
+  - attack.t1098.001

@@ -59,3 +59,36 @@ detections:
         expect: alert
       - events: fixtures/cloudtrail/iam_login_profile_created.benign.json
         expect: clean
+
+  - id: okta-api-token-created
+    title: Okta API token created
+    logsource: okta
+    rule: rules/okta/okta_api_token_created.yml
+    attack: [T1098.001]
+    fixtures:
+      - events: fixtures/okta/okta_api_token_created.alert.json
+        expect: alert
+      - events: fixtures/okta/okta_api_token_created.benign.json
+        expect: clean
+
+  - id: okta-mfa-factor-reset
+    title: Okta MFA factor reset or deactivated
+    logsource: okta
+    rule: rules/okta/okta_mfa_factor_reset.yml
+    attack: [T1556.006]
+    fixtures:
+      - events: fixtures/okta/okta_mfa_factor_reset.alert.json
+        expect: alert
+      - events: fixtures/okta/okta_mfa_factor_reset.benign.json
+        expect: clean
+
+  - id: okta-super-admin-granted
+    title: Okta Super Administrator role granted
+    logsource: okta
+    rule: rules/okta/okta_super_admin_granted.yml
+    attack: [T1098.003]
+    fixtures:
+      - events: fixtures/okta/okta_super_admin_granted.alert.json
+        expect: alert
+      - events: fixtures/okta/okta_super_admin_granted.benign.json
+        expect: clean

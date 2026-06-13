@@ -1,0 +1,28 @@
+[
+  {
+    "uuid": "f6a7b8c9-6666-7777-8888-ffffaaaabbbb",
+    "published": "2026-06-12T19:11:07.920Z",
+    "eventType": "user.account.privilege.grant",
+    "version": "0",
+    "severity": "WARN",
+    "displayMessage": "Grant user privilege",
+    "actor": {
+      "id": "00u1example0intern",
+      "type": "User",
+      "alternateId": "dev-intern@example.com",
+      "displayName": "Dev Intern"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Windows 10", "browser": "FIREFOX"},
+      "ipAddress": "203.0.113.77",
+      "geographicalContext": {"city": "Reykjavik", "country": "Iceland"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "debugContext": {
+      "debugData": {"privilegeGranted": "Super administrator"}
+    },
+    "target": [
+      {"id": "00u1example0svc", "type": "User", "alternateId": "svc-automation@example.com", "displayName": "Service Automation"}
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "uuid": "a1b2c3d4-1111-2222-3333-aaaabbbbcccc",
+    "published": "2026-06-12T18:50:12.482Z",
+    "eventType": "system.api_token.create",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Create API token",
+    "actor": {
+      "id": "00u1example0intern",
+      "type": "User",
+      "alternateId": "dev-intern@example.com",
+      "displayName": "Dev Intern"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "python-requests/2.32", "os": "Unknown", "browser": "UNKNOWN"},
+      "ipAddress": "203.0.113.77",
+      "geographicalContext": {"city": "Reykjavik", "country": "Iceland"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "target": [
+      {"id": "00T1exampletoken", "type": "PublicApiToken", "alternateId": "unknown", "displayName": "ci-deploy"}
+    ]
+  }
+]

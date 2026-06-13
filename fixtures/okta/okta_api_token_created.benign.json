@@ -1,0 +1,46 @@
+[
+  {
+    "uuid": "b2c3d4e5-2222-3333-4444-bbbbccccdddd",
+    "published": "2026-06-12T08:14:03.001Z",
+    "eventType": "system.api_token.revoke",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Revoke API token",
+    "actor": {
+      "id": "00u1example0platform",
+      "type": "User",
+      "alternateId": "platform-admin@example.com",
+      "displayName": "Platform Admin"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Mac OS X", "browser": "CHROME"},
+      "ipAddress": "198.51.100.20",
+      "geographicalContext": {"city": "Seattle", "country": "United States"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "target": [
+      {"id": "00T1exampleold", "type": "PublicApiToken", "alternateId": "unknown", "displayName": "legacy-token"}
+    ]
+  },
+  {
+    "uuid": "c3d4e5f6-3333-4444-5555-ccccddddeeee",
+    "published": "2026-06-12T08:20:55.722Z",
+    "eventType": "user.session.start",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "User login to Okta",
+    "actor": {
+      "id": "00u1example0platform",
+      "type": "User",
+      "alternateId": "platform-admin@example.com",
+      "displayName": "Platform Admin"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Mac OS X", "browser": "CHROME"},
+      "ipAddress": "198.51.100.20",
+      "geographicalContext": {"city": "Seattle", "country": "United States"}
+    },
+    "outcome": {"result": "SUCCESS"},
+    "target": []
+  }
+]
