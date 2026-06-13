@@ -1,0 +1,26 @@
+title: IAM user added to an administrator group
+id: 7e4c9f5a-1b62-4d83-9a07-4b5c6d7e8f90
+status: experimental
+description: >
+  An IAM user was added to a group whose name marks it as administrative.
+  Adding a controlled user to an admin group inherits its policies and is a
+  quieter privilege-escalation path than attaching an admin policy directly.
+references:
+  - https://attack.mitre.org/techniques/T1098/003/
+  - https://docs.aws.amazon.com/IAM/latest/APIReference/API_AddUserToGroup.html
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: iam.amazonaws.com
+    eventName: AddUserToGroup
+    requestParameters.groupName|contains: 'Admin'
+  condition: selection
+falsepositives:
+  - Onboarding an operator into an admin group through an approved access
+    request. Scope out the known joiner-mover-leaver automation.
+level: high
+tags:
+  - attack.privilege-escalation
+  - attack.t1098.003

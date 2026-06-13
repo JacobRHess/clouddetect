@@ -1,0 +1,24 @@
+title: KMS key scheduled for deletion
+id: 8f5d0a6b-2c73-4e94-8b18-5c6d7e8f9a01
+status: experimental
+description: >
+  A KMS key was scheduled for deletion. Destroying a key makes everything it
+  encrypted permanently unrecoverable, so this is a high-impact destructive
+  action and a hallmark of sabotage or extortion.
+references:
+  - https://attack.mitre.org/techniques/T1485/
+  - https://docs.aws.amazon.com/kms/latest/APIReference/API_ScheduleKeyDeletion.html
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: kms.amazonaws.com
+    eventName: ScheduleKeyDeletion
+  condition: selection
+falsepositives:
+  - Retiring a key as part of an approved key-rotation or decommissioning change.
+level: high
+tags:
+  - attack.impact
+  - attack.t1485

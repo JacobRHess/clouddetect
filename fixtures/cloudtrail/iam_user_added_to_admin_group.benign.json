@@ -1,0 +1,28 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "IAMUser",
+      "principalId": "AIDA1EXAMPLE0PLATFORM",
+      "arn": "arn:aws:iam::111122223333:user/platform-admin",
+      "accountId": "111122223333",
+      "userName": "platform-admin"
+    },
+    "eventTime": "2026-06-12T11:42:08Z",
+    "eventSource": "iam.amazonaws.com",
+    "eventName": "AddUserToGroup",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "198.51.100.20",
+    "userAgent": "aws-cli/2.15.0 Python/3.12.1 Linux/6.5.0",
+    "requestParameters": {
+      "userName": "new-analyst",
+      "groupName": "developers"
+    },
+    "responseElements": null,
+    "eventID": "a4b5c6d7-ffff-aaaa-bbbb-0abcdef01234",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]

@@ -31,9 +31,16 @@
     },
     {
       "techniqueID": "T1098.003",
-      "score": 2,
+      "score": 3,
       "color": "#1f6feb",
-      "comment": "iam-attach-admin-policy, okta-super-admin-granted",
+      "comment": "iam-attach-admin-policy, iam-user-added-to-admin-group, okta-super-admin-granted",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1485",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "kms-key-scheduled-deletion",
       "enabled": true
     },
     {
@@ -45,9 +52,9 @@
     },
     {
       "techniqueID": "T1562.008",
-      "score": 2,
+      "score": 3,
       "color": "#1f6feb",
-      "comment": "cloudtrail-logging-disabled, guardduty-disabled",
+      "comment": "aws-config-recorder-stopped, cloudtrail-logging-disabled, guardduty-disabled",
       "enabled": true
     }
   ],

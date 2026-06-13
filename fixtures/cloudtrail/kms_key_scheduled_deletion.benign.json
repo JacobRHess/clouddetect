@@ -1,0 +1,30 @@
+[
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "AssumedRole",
+      "principalId": "AROA1EXAMPLE0PLATFORM:key-rotation",
+      "arn": "arn:aws:sts::111122223333:assumed-role/key-rotation/key-rotation",
+      "accountId": "111122223333"
+    },
+    "eventTime": "2026-06-12T02:00:11Z",
+    "eventSource": "kms.amazonaws.com",
+    "eventName": "CreateKey",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "10.0.4.12",
+    "userAgent": "aws-sdk-go/1.50.0",
+    "requestParameters": {
+      "description": "rotated data key",
+      "keyUsage": "ENCRYPT_DECRYPT",
+      "origin": "AWS_KMS"
+    },
+    "responseElements": {
+      "keyMetadata": {"keyId": "abcd1234-12ab-34cd-56ef-0987654321fe", "enabled": true}
+    },
+    "eventID": "c6d7e8f9-bbbb-cccc-dddd-bcdef0123456",
+    "readOnly": false,
+    "eventType": "AwsApiCall",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
+  }
+]
