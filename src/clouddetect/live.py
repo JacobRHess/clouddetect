@@ -24,6 +24,7 @@ the boto3 and subprocess calls are integration glue, run by hand.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import time
 from dataclasses import dataclass
@@ -98,19 +99,32 @@ def detection_for(technique: str) -> str:
 
 
 def _run_stratus(  # pragma: no cover - shells out to the stratus binary
-    action: str, technique: str, *, binary: str = "stratus", timeout: int = 600
+    action: str,
+    technique: str,
+    *,
+    binary: str = "stratus",
+    timeout: int = 600,
+    region: str | None = None,
 ) -> str:
-    argv = [binary, action, technique, "--no-color"]
+    argv = [binary, action, technique]
+    # stratus (AWS Go SDK) reads the region from AWS_REGION, not ~/.aws/config,
+    # so pass it explicitly or it fails with "you have not set your region".
+    env = os.environ.copy()
+    if region:
+        env["AWS_REGION"] = region
     try:
         proc = subprocess.run(  # noqa: S603
-            argv, capture_output=True, text=True, timeout=timeout, check=False
+            argv, capture_output=True, text=True, timeout=timeout, check=False, env=env
         )
     except FileNotFoundError as exc:
         raise StratusError(f"{binary!r} not found on PATH; install stratus-red-team") from exc
     except subprocess.TimeoutExpired as exc:
         raise StratusError(f"stratus {action} exceeded {timeout}s") from exc
     if proc.returncode != 0:
-        raise StratusError(f"stratus {action} {technique} failed: {proc.stderr.strip()[-500:]}")
+        # stratus logs failures to stdout, not stderr, so include both or the
+        # error is an unhelpful blank line.
+        detail = (proc.stderr.strip() or proc.stdout.strip() or "no output")[-800:]
+        raise StratusError(f"stratus {action} {technique} failed: {detail}")
     return proc.stdout
 
 
@@ -160,15 +174,22 @@ def detonate(  # pragma: no cover - drives stratus + AWS end to end
     timeout: int = 900,
 ) -> DetonationResult:
     """Detonate one technique, replay its real CloudTrail through the engines."""
+    import boto3
+
     from clouddetect.manifest import load
 
     detection_id = detection_for(technique)
     detection = next(d for d in load() if d.id == detection_id)
     event_names = TECHNIQUE_EVENT_NAMES.get(technique, ())
 
-    reader = CloudTrailReader(region)
+    # stratus needs an explicit region; resolve it once from the flag or config.
+    resolved = region or boto3.Session().region_name
+    if not resolved:
+        raise LiveError("no AWS region set; pass --region or configure a default region")
+
+    reader = CloudTrailReader(resolved)
     since = datetime.now(UTC)
-    _run_stratus("detonate", technique)
+    _run_stratus("detonate", technique, region=resolved)
     try:
         events = reader.poll(event_names, since, timeout=timeout)
         if not events:
@@ -179,7 +200,7 @@ def detonate(  # pragma: no cover - drives stratus + AWS end to end
         fired = {engine.name: engine.replay(detection, events) for engine in engines}
     finally:
         if not keep:
-            _run_stratus("cleanup", technique)
+            _run_stratus("cleanup", technique, region=resolved)
 
     return DetonationResult(
         technique=technique,

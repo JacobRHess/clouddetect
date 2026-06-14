@@ -41,6 +41,18 @@ uv run pytest -m replay
 uv run clouddetect report --out report.html        # optional: the HTML summary
 ```
 
+If you already run a native Splunk on this machine, it owns ports 8088/8089 and
+the lab container will fail to bind them. Map the lab Splunk to free ports and
+point the harness at them:
+
+```bash
+# bring the lab Splunk up on alternate host ports, then:
+export CD_HEC_PORT=28088
+export CD_API_PORT=28089
+```
+
+`CD_OS_URL` does the same for OpenSearch if 9200 is taken.
+
 ## Adding a detection
 
 1. **Write the Sigma rule** under `rules/cloudtrail/` or `rules/okta/`. Reference
