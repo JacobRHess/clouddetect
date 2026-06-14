@@ -19,3 +19,8 @@ uv run python -m clouddetect.attackdoc > docs/ATTACK.md
 | T1098.001 | Account Manipulation: Additional Cloud Credentials | okta-api-token-created | okta |
 | T1556.006 | Modify Authentication Process: Multi-Factor Authentication | okta-mfa-factor-reset | okta |
 | T1098.003 | Account Manipulation: Additional Cloud Roles | okta-super-admin-granted | okta |
+| T1528 | Steal Application Access Token | entra-oauth-consent-grant | entra |
+| T1098.001 | Account Manipulation: Additional Cloud Credentials | entra-sp-credential-added | entra |
+| T1556 | Modify Authentication Process | entra-conditional-access-deleted | entra |
+| T1484.002 | Domain or Tenant Policy Modification: Trust Modification | entra-federation-domain-set | entra |
+| T1556 | Modify Authentication Process | entra-strong-auth-disabled | entra |

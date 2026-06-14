@@ -24,9 +24,9 @@
     },
     {
       "techniqueID": "T1098.001",
-      "score": 1,
+      "score": 2,
       "color": "#1f6feb",
-      "comment": "okta-api-token-created",
+      "comment": "entra-sp-credential-added, okta-api-token-created",
       "enabled": true
     },
     {
@@ -37,10 +37,31 @@
       "enabled": true
     },
     {
+      "techniqueID": "T1484.002",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "entra-federation-domain-set",
+      "enabled": true
+    },
+    {
       "techniqueID": "T1485",
       "score": 1,
       "color": "#1f6feb",
       "comment": "kms-key-scheduled-deletion",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1528",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "entra-oauth-consent-grant",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1556",
+      "score": 2,
+      "color": "#1f6feb",
+      "comment": "entra-conditional-access-deleted, entra-strong-auth-disabled",
       "enabled": true
     },
     {

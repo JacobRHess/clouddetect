@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Directory_aaaa7777_SETDOMAIN",
+    "category": "DirectoryManagement",
+    "activityDisplayName": "Set domain authentication",
+    "activityDateTime": "2026-06-13T19:58:02Z",
+    "loggedByService": "Core Directory",
+    "operationType": "Update",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-111111111111",
+        "userPrincipalName": "dev-intern@contoso.com",
+        "ipAddress": "203.0.113.77"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "Domain",
+        "displayName": "contoso.com",
+        "id": "contoso.com"
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Directory_bbbb2222_UPDATEAPP",
+    "category": "ApplicationManagement",
+    "activityDisplayName": "Update application",
+    "activityDateTime": "2026-06-13T09:12:03Z",
+    "loggedByService": "Core Directory",
+    "operationType": "Update",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-999999999999",
+        "userPrincipalName": "platform-admin@contoso.com",
+        "ipAddress": "198.51.100.20"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "Application",
+        "displayName": "Internal HR Portal",
+        "id": "11112222-3333-4444-5555-666677778888"
+      }
+    ]
+  }
+]

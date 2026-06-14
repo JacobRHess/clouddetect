@@ -1,0 +1,25 @@
+title: Entra ID strong authentication disabled for a user
+id: 5e6f7a8b-9c0d-4e1f-2a3b-4c5d6e7f8091
+status: experimental
+description: >
+  Strong authentication (MFA) was disabled for a user in Entra ID. Turning MFA
+  off for an account is a defense-evasion and account-takeover precursor: it
+  removes the second factor so a stolen password is enough, and it is rarely a
+  legitimate administrative action.
+references:
+  - https://attack.mitre.org/techniques/T1556/
+logsource:
+  product: azure
+  service: auditlogs
+detection:
+  selection:
+    category: UserManagement
+    activityDisplayName: Disable Strong Authentication
+  condition: selection
+falsepositives:
+  - Help desk clearing a user's MFA before re-enrollment, through an approved
+    verification process.
+level: high
+tags:
+  - attack.defense-evasion
+  - attack.t1556

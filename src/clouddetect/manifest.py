@@ -37,6 +37,7 @@ class LogSource(Enum):
 
     CLOUDTRAIL = "cloudtrail"
     OKTA = "okta"
+    ENTRA = "entra"
 
 
 @dataclass(frozen=True, slots=True)

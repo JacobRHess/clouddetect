@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Directory_ffff6666_UPDATECA",
+    "category": "Policy",
+    "activityDisplayName": "Update conditional access policy",
+    "activityDateTime": "2026-06-13T10:20:45Z",
+    "loggedByService": "Conditional Access",
+    "operationType": "Update",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-999999999999",
+        "userPrincipalName": "platform-admin@contoso.com",
+        "ipAddress": "198.51.100.20"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "Policy",
+        "displayName": "Block legacy authentication",
+        "id": "ca888888-9999-0000-1111-222233334444"
+      }
+    ]
+  }
+]

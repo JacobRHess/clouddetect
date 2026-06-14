@@ -31,6 +31,7 @@ from clouddetect.splunk import SplunkClient
 _SPLUNK_SOURCETYPE = {
     LogSource.CLOUDTRAIL: "aws:cloudtrail",
     LogSource.OKTA: "okta:system",
+    LogSource.ENTRA: "azure:entra",
 }
 
 

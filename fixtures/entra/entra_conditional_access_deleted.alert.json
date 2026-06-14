@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Directory_eeee5555_DELCA",
+    "category": "Policy",
+    "activityDisplayName": "Delete conditional access policy",
+    "activityDateTime": "2026-06-13T19:51:34Z",
+    "loggedByService": "Conditional Access",
+    "operationType": "Delete",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-111111111111",
+        "userPrincipalName": "dev-intern@contoso.com",
+        "ipAddress": "203.0.113.77"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "Policy",
+        "displayName": "Require MFA for all users",
+        "id": "ca111111-2222-3333-4444-555566667777"
+      }
+    ]
+  }
+]
