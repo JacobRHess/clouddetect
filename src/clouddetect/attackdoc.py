@@ -23,7 +23,10 @@ TECHNIQUE_NAMES = {
     "T1098": "Account Manipulation",
     "T1098.001": "Account Manipulation: Additional Cloud Credentials",
     "T1098.003": "Account Manipulation: Additional Cloud Roles",
+    "T1484.002": "Domain or Tenant Policy Modification: Trust Modification",
     "T1485": "Data Destruction",
+    "T1528": "Steal Application Access Token",
+    "T1556": "Modify Authentication Process",
     "T1556.006": "Modify Authentication Process: Multi-Factor Authentication",
     "T1562.008": "Impair Defenses: Disable or Modify Cloud Logs",
 }

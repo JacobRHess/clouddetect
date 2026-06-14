@@ -1,0 +1,24 @@
+title: Entra ID conditional access policy deleted
+id: 3c4d5e6f-7a8b-4c9d-0e1f-2a3b4c5d6e7f
+status: experimental
+description: >
+  A conditional access policy was deleted in Entra ID. Conditional access is
+  where MFA and device requirements are enforced; deleting a policy quietly
+  strips those controls and is a defense-evasion step that widens the blast
+  radius of any compromised credential.
+references:
+  - https://attack.mitre.org/techniques/T1556/
+logsource:
+  product: azure
+  service: auditlogs
+detection:
+  selection:
+    category: Policy
+    activityDisplayName: Delete conditional access policy
+  condition: selection
+falsepositives:
+  - Retiring a superseded policy during an approved access-policy change.
+level: high
+tags:
+  - attack.defense-evasion
+  - attack.t1556

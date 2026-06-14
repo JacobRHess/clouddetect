@@ -1,0 +1,25 @@
+title: Entra ID domain authentication set to federated
+id: 4d5e6f7a-8b9c-4d0e-1f2a-3b4c5d6e7f80
+status: experimental
+description: >
+  A domain's authentication was changed in Entra ID (Set domain authentication).
+  Switching a domain to federated and adding an attacker-controlled trust lets
+  them mint tokens for any user in the tenant (the AADInternals / Golden SAML
+  style backdoor), a durable foothold that bypasses passwords and MFA.
+references:
+  - https://attack.mitre.org/techniques/T1484/002/
+logsource:
+  product: azure
+  service: auditlogs
+detection:
+  selection:
+    category: DirectoryManagement
+    activityDisplayName: Set domain authentication
+  condition: selection
+falsepositives:
+  - A planned migration to or from federated authentication (for example an ADFS
+    rollout) through an approved change.
+level: high
+tags:
+  - attack.privilege-escalation
+  - attack.t1484.002

@@ -1,0 +1,25 @@
+title: Entra ID consent granted to an application
+id: 1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d
+status: experimental
+description: >
+  A user or admin consented to an application in Entra ID. Tricking a victim
+  into consenting to a malicious OAuth app (the illicit consent grant) hands the
+  attacker a token with the app's delegated permissions, a phishing-resistant
+  way into the tenant that survives a password reset.
+references:
+  - https://attack.mitre.org/techniques/T1528/
+logsource:
+  product: azure
+  service: auditlogs
+detection:
+  selection:
+    category: ApplicationManagement
+    activityDisplayName: Consent to application
+    result: success
+  condition: selection
+falsepositives:
+  - Routine admin consent for a vetted enterprise application during onboarding.
+level: medium
+tags:
+  - attack.credential-access
+  - attack.t1528

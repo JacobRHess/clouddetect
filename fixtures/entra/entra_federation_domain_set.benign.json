@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Directory_bbbb8888_VERIFYDOMAIN",
+    "category": "DirectoryManagement",
+    "activityDisplayName": "Verify domain",
+    "activityDateTime": "2026-06-13T11:05:27Z",
+    "loggedByService": "Core Directory",
+    "operationType": "Update",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-999999999999",
+        "userPrincipalName": "platform-admin@contoso.com",
+        "ipAddress": "198.51.100.20"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "Domain",
+        "displayName": "marketing.contoso.com",
+        "id": "marketing.contoso.com"
+      }
+    ]
+  }
+]

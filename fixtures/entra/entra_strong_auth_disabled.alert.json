@@ -1,0 +1,27 @@
+[
+  {
+    "id": "Directory_cccc9999_DISABLEMFA",
+    "category": "UserManagement",
+    "activityDisplayName": "Disable Strong Authentication",
+    "activityDateTime": "2026-06-13T20:03:49Z",
+    "loggedByService": "Core Directory",
+    "operationType": "Update",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-111111111111",
+        "userPrincipalName": "dev-intern@contoso.com",
+        "ipAddress": "203.0.113.77"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "User",
+        "displayName": "Chief Finance Officer",
+        "userPrincipalName": "cfo@contoso.com",
+        "id": "dddd0000-1111-2222-3333-444455556666"
+      }
+    ]
+  }
+]

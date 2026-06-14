@@ -1,0 +1,27 @@
+[
+  {
+    "id": "Directory_dddd0001_ENABLEMFA",
+    "category": "UserManagement",
+    "activityDisplayName": "Enable Strong Authentication",
+    "activityDateTime": "2026-06-13T11:48:12Z",
+    "loggedByService": "Core Directory",
+    "operationType": "Update",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-999999999999",
+        "userPrincipalName": "platform-admin@contoso.com",
+        "ipAddress": "198.51.100.20"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "User",
+        "displayName": "New Hire",
+        "userPrincipalName": "new-hire@contoso.com",
+        "id": "eeee1111-2222-3333-4444-555566667777"
+      }
+    ]
+  }
+]

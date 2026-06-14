@@ -125,3 +125,58 @@ detections:
         expect: alert
       - events: fixtures/okta/okta_super_admin_granted.benign.json
         expect: clean
+
+  - id: entra-oauth-consent-grant
+    title: Entra ID consent granted to an application
+    logsource: entra
+    rule: rules/entra/entra_oauth_consent_grant.yml
+    attack: [T1528]
+    fixtures:
+      - events: fixtures/entra/entra_oauth_consent_grant.alert.json
+        expect: alert
+      - events: fixtures/entra/entra_oauth_consent_grant.benign.json
+        expect: clean
+
+  - id: entra-sp-credential-added
+    title: Entra ID service principal credential added
+    logsource: entra
+    rule: rules/entra/entra_sp_credential_added.yml
+    attack: [T1098.001]
+    fixtures:
+      - events: fixtures/entra/entra_sp_credential_added.alert.json
+        expect: alert
+      - events: fixtures/entra/entra_sp_credential_added.benign.json
+        expect: clean
+
+  - id: entra-conditional-access-deleted
+    title: Entra ID conditional access policy deleted
+    logsource: entra
+    rule: rules/entra/entra_conditional_access_deleted.yml
+    attack: [T1556]
+    fixtures:
+      - events: fixtures/entra/entra_conditional_access_deleted.alert.json
+        expect: alert
+      - events: fixtures/entra/entra_conditional_access_deleted.benign.json
+        expect: clean
+
+  - id: entra-federation-domain-set
+    title: Entra ID domain authentication set to federated
+    logsource: entra
+    rule: rules/entra/entra_federation_domain_set.yml
+    attack: [T1484.002]
+    fixtures:
+      - events: fixtures/entra/entra_federation_domain_set.alert.json
+        expect: alert
+      - events: fixtures/entra/entra_federation_domain_set.benign.json
+        expect: clean
+
+  - id: entra-strong-auth-disabled
+    title: Entra ID strong authentication disabled for a user
+    logsource: entra
+    rule: rules/entra/entra_strong_auth_disabled.yml
+    attack: [T1556]
+    fixtures:
+      - events: fixtures/entra/entra_strong_auth_disabled.alert.json
+        expect: alert
+      - events: fixtures/entra/entra_strong_auth_disabled.benign.json
+        expect: clean

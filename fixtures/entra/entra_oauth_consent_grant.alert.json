@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Directory_aaaa1111_CONSENT",
+    "category": "ApplicationManagement",
+    "activityDisplayName": "Consent to application",
+    "activityDateTime": "2026-06-13T19:40:11Z",
+    "loggedByService": "Core Directory",
+    "operationType": "Assign",
+    "result": "success",
+    "resultReason": "",
+    "initiatedBy": {
+      "user": {
+        "id": "00000000-aaaa-bbbb-cccc-111111111111",
+        "userPrincipalName": "dev-intern@contoso.com",
+        "ipAddress": "203.0.113.77"
+      }
+    },
+    "targetResources": [
+      {
+        "type": "ServicePrincipal",
+        "displayName": "Mail Backup Helper",
+        "id": "99999999-dddd-eeee-ffff-222222222222"
+      }
+    ]
+  }
+]
