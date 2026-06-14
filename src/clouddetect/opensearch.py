@@ -145,6 +145,34 @@ class OpenSearchClient:
             raise OpenSearchError(f"count returned {resp.status_code}: {resp.text[:200]}")
         return int(resp.json().get("count", 0))
 
+    def correlation_fires(self, index: str, lucene: str, group_by: str, threshold: int) -> bool:
+        """Does any `group_by` value have at least `threshold` docs matching `lucene`?
+
+        The Lucene backend cannot express a count-over-time correlation, so the
+        OpenSearch side runs it as a terms aggregation over the base rule's
+        matches. The fixtures sit inside a single time window, so a bucket count
+        is the same verdict the windowed Splunk search reaches.
+        """
+        self._check_index(index)
+        resp = self._request(
+            "POST",
+            f"/{index}/_search",
+            json={
+                "size": 0,
+                "query": {"query_string": {"query": lucene, "analyze_wildcard": True}},
+                "aggs": {
+                    "by_group": {
+                        "terms": {"field": group_by, "size": 1000, "min_doc_count": threshold}
+                    }
+                },
+            },
+        )
+        if resp.status_code != 200:
+            raise OpenSearchError(f"agg search returned {resp.status_code}: {resp.text[:200]}")
+        aggs = resp.json().get("aggregations", {})
+        buckets = aggs.get("by_group", {}).get("buckets", [])
+        return any(b.get("doc_count", 0) >= threshold for b in buckets)
+
     def drop(self, index: str) -> None:
         self._check_index(index)
         self._request("DELETE", f"/{index}")

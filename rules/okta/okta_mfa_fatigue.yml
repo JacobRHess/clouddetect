@@ -1,0 +1,38 @@
+title: Okta denied Verify push (base)
+name: okta_deny_push
+status: experimental
+description: A single Okta Verify push that the user denied.
+logsource:
+  product: okta
+  service: okta
+detection:
+  selection:
+    eventType: user.mfa.okta_verify.deny_push
+  condition: selection
+---
+title: Okta MFA fatigue
+id: 8a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d
+status: experimental
+description: >
+  A user denied five or more Okta Verify pushes inside ten minutes. That is the
+  signature of MFA fatigue: an attacker who already has the password hammers the
+  account with push prompts hoping the victim eventually taps approve. The denied
+  pushes are the tell before one slips through.
+references:
+  - https://attack.mitre.org/techniques/T1621/
+correlation:
+  type: event_count
+  rules:
+    - okta_deny_push
+  group-by:
+    - actor.alternateId
+  timespan: 10m
+  condition:
+    gte: 5
+falsepositives:
+  - A user fat-fingering the deny button a couple of times is well under the
+    threshold; sustained denials are the signal.
+level: high
+tags:
+  - attack.credential-access
+  - attack.t1621

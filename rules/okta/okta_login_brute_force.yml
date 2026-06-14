@@ -1,0 +1,38 @@
+title: Okta failed sign-in (base)
+name: okta_failed_login
+status: experimental
+description: A single failed Okta sign-in.
+logsource:
+  product: okta
+  service: okta
+detection:
+  selection:
+    eventType: user.session.start
+    outcome.result: FAILURE
+  condition: selection
+---
+title: Okta login brute force
+id: 9b2c3d4e-5f6a-4b7c-8d9e-0f1a2b3c4d5e
+status: experimental
+description: >
+  Ten or more failed Okta sign-ins for one account inside ten minutes. Sustained
+  failures against a single account are password guessing or credential stuffing,
+  the noisy front end of an account takeover.
+references:
+  - https://attack.mitre.org/techniques/T1110/001/
+correlation:
+  type: event_count
+  rules:
+    - okta_failed_login
+  group-by:
+    - actor.alternateId
+  timespan: 10m
+  condition:
+    gte: 10
+falsepositives:
+  - A user with a stale cached password will generate a short burst of failures,
+    well under the threshold, until they update it.
+level: medium
+tags:
+  - attack.credential-access
+  - attack.t1110.001

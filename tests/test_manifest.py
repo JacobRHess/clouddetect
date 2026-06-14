@@ -51,11 +51,17 @@ def test_attack_tags_look_like_techniques(detections: tuple[Detection, ...]) -> 
 
 def test_converts_to_spl(detections: tuple[Detection, ...]) -> None:
     for det in detections:
-        spl = sigma.to_spl(det.rule.read_text(encoding="utf-8"))
+        rule = det.rule.read_text(encoding="utf-8")
+        spl = sigma.correlation_spec(rule).spl if sigma.is_correlation(rule) else sigma.to_spl(rule)
         assert spl.strip(), f"{det.id} produced empty SPL"
 
 
 def test_converts_to_lucene(detections: tuple[Detection, ...]) -> None:
     for det in detections:
-        lucene = sigma.to_lucene(det.rule.read_text(encoding="utf-8"))
-        assert lucene.strip(), f"{det.id} produced empty Lucene"
+        rule = det.rule.read_text(encoding="utf-8")
+        # Correlation rules have no single Lucene query; the OpenSearch side runs
+        # the base filter as an aggregation, so check that base filter instead.
+        if sigma.is_correlation(rule):
+            assert sigma.correlation_spec(rule).base_lucene.strip(), f"{det.id} empty base Lucene"
+        else:
+            assert sigma.to_lucene(rule).strip(), f"{det.id} produced empty Lucene"

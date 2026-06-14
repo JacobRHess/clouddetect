@@ -24,3 +24,6 @@ uv run python -m clouddetect.attackdoc > docs/ATTACK.md
 | T1556 | Modify Authentication Process | entra-conditional-access-deleted | entra |
 | T1484.002 | Domain or Tenant Policy Modification: Trust Modification | entra-federation-domain-set | entra |
 | T1556 | Modify Authentication Process | entra-strong-auth-disabled | entra |
+| T1621 | Multi-Factor Authentication Request Generation | okta-mfa-fatigue | okta |
+| T1110.001 | Brute Force: Password Guessing | okta-login-brute-force | okta |
+| T1555 | Credentials from Password Stores | secretsmanager-retrieval-burst | cloudtrail |
