@@ -70,7 +70,7 @@ def _card(detection: Detection, results: Results) -> str:
     for fx in detection.fixtures:
         cells = []
         for engine in ENGINES:
-            cell = results.get((detection.id, engine, fx.name), CellResult(None, "not run"))
+            cell = results.get((detection.id, engine, fx.name), CellResult(None, "not evaluated"))
             cells.append(f'<span class="eng">{engine}</span>{_pill(cell)}')
         rows.append(
             f'<div class="fx"><code>{html.escape(fx.name)}</code>'
