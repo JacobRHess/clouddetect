@@ -180,3 +180,36 @@ detections:
         expect: alert
       - events: fixtures/entra/entra_strong_auth_disabled.benign.json
         expect: clean
+
+  - id: okta-mfa-fatigue
+    title: Okta MFA fatigue
+    logsource: okta
+    rule: rules/okta/okta_mfa_fatigue.yml
+    attack: [T1621]
+    fixtures:
+      - events: fixtures/okta/okta_mfa_fatigue.alert.json
+        expect: alert
+      - events: fixtures/okta/okta_mfa_fatigue.benign.json
+        expect: clean
+
+  - id: okta-login-brute-force
+    title: Okta login brute force
+    logsource: okta
+    rule: rules/okta/okta_login_brute_force.yml
+    attack: [T1110.001]
+    fixtures:
+      - events: fixtures/okta/okta_login_brute_force.alert.json
+        expect: alert
+      - events: fixtures/okta/okta_login_brute_force.benign.json
+        expect: clean
+
+  - id: secretsmanager-retrieval-burst
+    title: Secrets Manager mass retrieval
+    logsource: cloudtrail
+    rule: rules/cloudtrail/secretsmanager_retrieval_burst.yml
+    attack: [T1555]
+    fixtures:
+      - events: fixtures/cloudtrail/secretsmanager_retrieval_burst.alert.json
+        expect: alert
+      - events: fixtures/cloudtrail/secretsmanager_retrieval_burst.benign.json
+        expect: clean

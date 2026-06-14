@@ -29,6 +29,9 @@ def _cmd_list(_: argparse.Namespace) -> int:
 
 def _convert_both(det: Detection) -> tuple[str, str]:
     rule = det.rule.read_text(encoding="utf-8")
+    if sigma.is_correlation(rule):
+        spec = sigma.correlation_spec(rule)
+        return spec.spl, spec.base_lucene
     return sigma.to_spl(rule), sigma.to_lucene(rule)
 
 

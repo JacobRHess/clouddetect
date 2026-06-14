@@ -16,11 +16,14 @@ logic, never an index selector.
 
 from __future__ import annotations
 
+import re
+from dataclasses import dataclass
 from functools import cache
 
 from sigma.backends.elasticsearch import LuceneBackend  # type: ignore[attr-defined]
 from sigma.backends.splunk import SplunkBackend  # type: ignore[attr-defined]
 from sigma.collection import SigmaCollection
+from sigma.correlations import SigmaCorrelationRule
 
 
 class ConversionError(ValueError):
@@ -55,3 +58,62 @@ def to_spl(rule_text: str) -> str:
 def to_lucene(rule_text: str) -> str:
     """Convert a Sigma rule to an OpenSearch/Lucene query string."""
     return _single(LuceneBackend().convert(_collection(rule_text)), "lucene")
+
+
+@dataclass(frozen=True, slots=True)
+class Correlation:
+    """A count-over-time detection, in the form each engine needs.
+
+    Splunk converts a Sigma correlation rule natively (the `spl` field is the
+    full `... | bin | stats count by ... | search count >= N` search). The
+    Lucene backend does not support correlation, so for OpenSearch we carry the
+    base rule's filter plus the group-by field and threshold, and the engine
+    runs a terms aggregation itself.
+    """
+
+    spl: str
+    base_lucene: str
+    group_by: str
+    threshold: int
+
+
+def is_correlation(rule_text: str) -> bool:
+    return any(isinstance(r, SigmaCorrelationRule) for r in _collection(rule_text).rules)
+
+
+def _base_only(rule_text: str) -> str:
+    """The non-correlation YAML documents of a rule file, rejoined."""
+    docs = [d for d in re.split(r"(?m)^---\s*$", rule_text) if d.strip()]
+    base = [d for d in docs if "correlation:" not in d]
+    if not base:
+        raise ConversionError("correlation rule has no base detection document")
+    return "\n---\n".join(base)
+
+
+@cache
+def correlation_spec(rule_text: str) -> Correlation:
+    """Parse a correlation rule into a Splunk search and OpenSearch aggregation inputs."""
+    coll = _collection(rule_text)
+    corr = next((r for r in coll.rules if isinstance(r, SigmaCorrelationRule)), None)
+    if corr is None:
+        raise ConversionError("rule has no correlation block")
+    if corr.type.name != "EVENT_COUNT":
+        raise ConversionError(f"unsupported correlation type {corr.type.name!r}; only event_count")
+    # The condition is a union of count/field-ref forms; only the simple
+    # count comparison is supported here, so read op/count defensively.
+    op = getattr(corr.condition, "op", None)
+    count = getattr(corr.condition, "count", None)
+    if op is None or count is None:
+        raise ConversionError("unsupported correlation condition; only a count threshold")
+    if op.name != "GTE":
+        raise ConversionError(f"unsupported correlation condition {op.name!r}; only gte")
+    if not corr.group_by:
+        raise ConversionError("correlation rule needs exactly one group-by field")
+    spl = _single(SplunkBackend().convert(coll), "splunk")
+    base_lucene = _single(LuceneBackend().convert(_collection(_base_only(rule_text))), "lucene")
+    return Correlation(
+        spl=spl,
+        base_lucene=base_lucene,
+        group_by=corr.group_by[0],
+        threshold=int(count),
+    )

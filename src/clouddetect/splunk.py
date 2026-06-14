@@ -153,6 +153,15 @@ class SplunkClient:
         """Run a detection's SPL confined to a single ingestion run."""
         return self.search(f"search {self._scope(run)} ({spl})")
 
+    def search_correlation(self, run: str, spl: str) -> list[dict[str, Any]]:
+        """Run a correlation search (base filter + aggregation pipes) for one run.
+
+        The converted SPL leads with the base filter and then pipes through
+        `bin | stats | search`, so the run scope is prepended to that leading
+        filter rather than wrapped in parentheses.
+        """
+        return self.search(f"search {self._scope(run)} {spl}")
+
     def count(self, run: str) -> int:
         # `| stats count` always returns exactly one row; an empty result means
         # the search itself failed, which the caller must not read as "0 events".

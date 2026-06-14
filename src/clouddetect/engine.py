@@ -68,13 +68,16 @@ class SplunkEngine:
 
     def replay(self, detection: Detection, events: list[dict[str, Any]]) -> bool:
         run = uuid.uuid4().hex
-        spl = sigma.to_spl(detection.rule.read_text(encoding="utf-8"))
+        rule_text = detection.rule.read_text(encoding="utf-8")
         sourcetype = _SPLUNK_SOURCETYPE[detection.logsource]
         self.client.post_events(events, sourcetype=sourcetype, run=run)
         # HEC accepts before indexing finishes; wait until the run's events are
         # searchable so a slow index never looks like a detection miss.
         self.client.wait_for_count(run, expected=len(events))
-        return len(self.client.search_run(run, spl)) > 0
+        if sigma.is_correlation(rule_text):
+            spl = sigma.correlation_spec(rule_text).spl
+            return len(self.client.search_correlation(run, spl)) > 0
+        return len(self.client.search_run(run, sigma.to_spl(rule_text))) > 0
 
 
 class OpenSearchEngine:
@@ -88,9 +91,14 @@ class OpenSearchEngine:
 
     def replay(self, detection: Detection, events: list[dict[str, Any]]) -> bool:
         index = f"clouddetect-{uuid.uuid4().hex}"
-        lucene = sigma.to_lucene(detection.rule.read_text(encoding="utf-8"))
+        rule_text = detection.rule.read_text(encoding="utf-8")
         try:
             self.client.index_events(index, events)
-            return self.client.count(index, lucene) > 0
+            if sigma.is_correlation(rule_text):
+                spec = sigma.correlation_spec(rule_text)
+                return self.client.correlation_fires(
+                    index, spec.base_lucene, spec.group_by, spec.threshold
+                )
+            return self.client.count(index, sigma.to_lucene(rule_text)) > 0
         finally:
             self.client.drop(index)

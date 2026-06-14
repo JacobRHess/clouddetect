@@ -37,6 +37,13 @@
       "enabled": true
     },
     {
+      "techniqueID": "T1110.001",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "okta-login-brute-force",
+      "enabled": true
+    },
+    {
       "techniqueID": "T1484.002",
       "score": 1,
       "color": "#1f6feb",
@@ -58,6 +65,13 @@
       "enabled": true
     },
     {
+      "techniqueID": "T1555",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "secretsmanager-retrieval-burst",
+      "enabled": true
+    },
+    {
       "techniqueID": "T1556",
       "score": 2,
       "color": "#1f6feb",
@@ -76,6 +90,13 @@
       "score": 3,
       "color": "#1f6feb",
       "comment": "aws-config-recorder-stopped, cloudtrail-logging-disabled, guardduty-disabled",
+      "enabled": true
+    },
+    {
+      "techniqueID": "T1621",
+      "score": 1,
+      "color": "#1f6feb",
+      "comment": "okta-mfa-fatigue",
       "enabled": true
     }
   ],
