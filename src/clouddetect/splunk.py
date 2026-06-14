@@ -59,18 +59,32 @@ class SplunkClient:
     def _api(self, path: str) -> str:
         return f"https://{self.config.host}:{self.config.api_port}{path}"
 
+    def _request(self, method: str, url: str, **kwargs: Any) -> requests.Response:
+        """Issue a request, mapping any transport failure to SplunkError.
+
+        `allow_redirects=False` on every call: these requests carry the HEC
+        token or basic-auth credentials and must never be bounced to another
+        host.
+        """
+        try:
+            return self._session.request(
+                method, url, timeout=self.config.timeout, allow_redirects=False, **kwargs
+            )
+        except requests.RequestException as exc:
+            raise SplunkError(f"{method} {url} failed: {exc}") from exc
+
     def wait_ready(self, attempts: int = 40, delay: float = 5.0) -> None:
         for _ in range(attempts):
             try:
-                resp = self._session.get(
+                resp = self._request(
+                    "GET",
                     self._api("/services/server/info"),
                     auth=(self.config.username, self.config.password),
                     params={"output_mode": "json"},
-                    timeout=self.config.timeout,
                 )
                 if resp.status_code == 200:
                     return
-            except requests.RequestException:
+            except SplunkError:
                 pass
             time.sleep(delay)
         raise SplunkError(f"Splunk not ready after {attempts} attempts")
@@ -93,18 +107,12 @@ class SplunkClient:
             if "_time" in event:
                 envelope["time"] = event["_time"]
             lines.append(json.dumps(envelope))
-        try:
-            resp = self._session.post(
-                url,
-                headers={"Authorization": f"Splunk {self.config.hec_token}"},
-                data="\n".join(lines),
-                timeout=self.config.timeout,
-                # This request carries the HEC token; never let a redirect carry
-                # it to another host.
-                allow_redirects=False,
-            )
-        except requests.RequestException as exc:
-            raise SplunkError(f"HEC post failed: {exc}") from exc
+        resp = self._request(
+            "POST",
+            url,
+            headers={"Authorization": f"Splunk {self.config.hec_token}"},
+            data="\n".join(lines),
+        )
         if resp.status_code != 200:
             raise SplunkError(f"HEC returned {resp.status_code}: {resp.text[:200]}")
         return len(events)
@@ -113,24 +121,19 @@ class SplunkClient:
         query = spl.strip()
         if not query.startswith("|") and not query.lower().startswith("search"):
             query = f"search {query}"
-        try:
-            resp = self._session.post(
-                self._api("/services/search/jobs"),
-                auth=(self.config.username, self.config.password),
-                data={
-                    "search": query,
-                    "earliest_time": earliest,
-                    "latest_time": latest,
-                    "exec_mode": "oneshot",
-                    "output_mode": "json",
-                    "count": 0,
-                },
-                timeout=self.config.timeout,
-                # Carries basic-auth credentials; do not follow redirects.
-                allow_redirects=False,
-            )
-        except requests.RequestException as exc:
-            raise SplunkError(f"search failed: {exc}") from exc
+        resp = self._request(
+            "POST",
+            self._api("/services/search/jobs"),
+            auth=(self.config.username, self.config.password),
+            data={
+                "search": query,
+                "earliest_time": earliest,
+                "latest_time": latest,
+                "exec_mode": "oneshot",
+                "output_mode": "json",
+                "count": 0,
+            },
+        )
         if resp.status_code != 200:
             raise SplunkError(f"search returned {resp.status_code}: {resp.text[:200]}")
         try:
@@ -157,9 +160,11 @@ class SplunkClient:
         if not rows:
             raise SplunkError(f"count search for run {run} returned no rows")
         try:
-            return int(rows[0].get("count", 0))
-        except (ValueError, TypeError):
-            return 0
+            return int(rows[0]["count"])
+        except (KeyError, ValueError, TypeError) as exc:
+            # A malformed count is a failure, not zero events - reading it as 0
+            # is exactly the mask this method's caller must not get.
+            raise SplunkError(f"unexpected count result {rows[0]!r}") from exc
 
     def wait_for_count(
         self, run: str, expected: int, timeout: float = 180.0, poll: float = 3.0

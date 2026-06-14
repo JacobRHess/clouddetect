@@ -90,6 +90,11 @@ def render_layer() -> dict[str, object]:
     }
 
 
+def write_layer(path: Path) -> None:
+    """Write the ATT&CK Navigator layer JSON to `path`."""
+    path.write_text(json.dumps(render_layer(), indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> int:
     import argparse
 
@@ -97,7 +102,7 @@ def main() -> int:
     parser.add_argument("--layer", type=Path, help="write the Navigator layer JSON here")
     args = parser.parse_args()
     if args.layer is not None:
-        args.layer.write_text(json.dumps(render_layer(), indent=2) + "\n", encoding="utf-8")
+        write_layer(args.layer)
         return 0
     print(render_markdown(), end="")
     return 0

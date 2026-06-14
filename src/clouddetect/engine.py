@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 import uuid
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Protocol
 
 from clouddetect import sigma
 from clouddetect.manifest import Detection, LogSource
@@ -46,7 +46,6 @@ def load_events(path: Path) -> list[dict[str, Any]]:
     return raw
 
 
-@runtime_checkable
 class Engine(Protocol):
     """Anything that can replay a fixture against a detection and report a hit."""
 

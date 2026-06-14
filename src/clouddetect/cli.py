@@ -89,11 +89,7 @@ def _cmd_attack(args: argparse.Namespace) -> int:
     from clouddetect import attackdoc
 
     if args.layer is not None:
-        import json
-
-        args.layer.write_text(
-            json.dumps(attackdoc.render_layer(), indent=2) + "\n", encoding="utf-8"
-        )
+        attackdoc.write_layer(args.layer)
         print(f"wrote {args.layer}")
     else:
         print(attackdoc.render_markdown(), end="")
