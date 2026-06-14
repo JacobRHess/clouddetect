@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -122,8 +123,9 @@ def _run_stratus(  # pragma: no cover - shells out to the stratus binary
         raise StratusError(f"stratus {action} exceeded {timeout}s") from exc
     if proc.returncode != 0:
         # stratus logs failures to stdout, not stderr, so include both or the
-        # error is an unhelpful blank line.
-        detail = (proc.stderr.strip() or proc.stdout.strip() or "no output")[-800:]
+        # error is an unhelpful blank line. Keep the head: the actual error line
+        # comes first, with stack/help text trailing.
+        detail = (proc.stderr.strip() or proc.stdout.strip() or "no output")[:1200]
         raise StratusError(f"stratus {action} {technique} failed: {detail}")
     return proc.stdout
 
@@ -152,15 +154,27 @@ class CloudTrailReader:  # pragma: no cover - talks to AWS
         """
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            found: list[dict[str, Any]] = []
+            # Dedup by eventID across names and pages so the reported count is
+            # the number of distinct events, not of API rows.
+            found: dict[str, dict[str, Any]] = {}
             for name in event_names:
-                payload = self._client.lookup_events(
-                    LookupAttributes=[{"AttributeKey": "EventName", "AttributeValue": name}],
-                    StartTime=since,
-                )
-                found.extend(normalize_lookup_events(payload))
+                token: str | None = None
+                while True:
+                    kwargs: dict[str, Any] = {
+                        "LookupAttributes": [{"AttributeKey": "EventName", "AttributeValue": name}],
+                        "StartTime": since,
+                    }
+                    if token:
+                        kwargs["NextToken"] = token
+                    payload = self._client.lookup_events(**kwargs)
+                    for event in normalize_lookup_events(payload):
+                        key = str(event.get("eventID") or len(found))
+                        found[key] = event
+                    token = payload.get("NextToken")
+                    if not token:
+                        break
             if found:
-                return found
+                return list(found.values())
             time.sleep(interval)
         return []
 
@@ -200,7 +214,12 @@ def detonate(  # pragma: no cover - drives stratus + AWS end to end
         fired = {engine.name: engine.replay(detection, events) for engine in engines}
     finally:
         if not keep:
-            _run_stratus("cleanup", technique, region=resolved)
+            # A cleanup failure must not mask the real error from the body
+            # (e.g. "no CloudTrail events"); report it, don't raise over it.
+            try:
+                _run_stratus("cleanup", technique, region=resolved)
+            except StratusError as exc:
+                print(f"warning: stratus cleanup failed: {exc}", file=sys.stderr)
 
     return DetonationResult(
         technique=technique,

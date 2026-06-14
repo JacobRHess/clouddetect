@@ -26,6 +26,13 @@ def test_every_technique_has_event_names() -> None:
         assert live.TECHNIQUE_EVENT_NAMES.get(technique), f"{technique} has no event names"
 
 
+def test_detection_for_resolves_known() -> None:
+    assert (
+        live.detection_for("aws.defense-evasion.cloudtrail-stop") == "cloudtrail-logging-disabled"
+    )
+    assert live.detection_for("aws.persistence.iam-create-admin-user") == "iam-attach-admin-policy"
+
+
 def test_detection_for_rejects_unknown() -> None:
     with pytest.raises(live.LiveError, match="no detection mapped"):
         live.detection_for("aws.discovery.not-a-real-technique")

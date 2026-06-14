@@ -42,5 +42,28 @@
     },
     "outcome": {"result": "SUCCESS"},
     "target": []
+  },
+  {
+    "uuid": "d4e5f6a7-4444-5555-6666-ddddeeeeffff",
+    "published": "2026-06-12T08:25:41.310Z",
+    "eventType": "system.api_token.create",
+    "version": "0",
+    "severity": "INFO",
+    "displayMessage": "Create API token",
+    "actor": {
+      "id": "00u1example0analyst",
+      "type": "User",
+      "alternateId": "analyst@example.com",
+      "displayName": "Security Analyst"
+    },
+    "client": {
+      "userAgent": {"rawUserAgent": "Mozilla/5.0", "os": "Windows 10", "browser": "EDGE"},
+      "ipAddress": "198.51.100.31",
+      "geographicalContext": {"city": "Seattle", "country": "United States"}
+    },
+    "outcome": {"result": "FAILURE", "reason": "Token creation denied by policy"},
+    "target": [
+      {"id": "00T1exampledenied", "type": "PublicApiToken", "alternateId": "unknown", "displayName": "blocked"}
+    ]
   }
 ]

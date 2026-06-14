@@ -6,8 +6,8 @@ deselected by the default `pytest -q` run, so the offline gate stays fast.
 
 Each detection's attack fixture must fire the rule and its benign fixture must
 stay silent - on *both* engines. A parametrized id reads like
-`iam-attach-admin-policy[splunk-iam_attach_admin_policy.alert.json]`, so a
-failure names the detection, the engine and the exact fixture that broke.
+`splunk-iam_attach_admin_policy.alert`, so a failure names the engine and the
+exact fixture that broke.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ _DETECTIONS = load()
 _ENGINES: tuple[Engine, ...] = (SplunkEngine(), OpenSearchEngine())
 
 _CASES = [
-    pytest.param(det, fx, eng, id=f"{eng.name}-{det.id}-{fx.expect.value}")
+    pytest.param(det, fx, eng, id=f"{eng.name}-{fx.events.stem}")
     for det in _DETECTIONS
     for fx in det.fixtures
     for eng in _ENGINES
