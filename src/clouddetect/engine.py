@@ -74,8 +74,7 @@ class SplunkEngine:
         # HEC accepts before indexing finishes; wait until the run's events are
         # searchable so a slow index never looks like a detection miss.
         self.client.wait_for_count(run, expected=len(events))
-        rows = self.client.search(f'search index={self.client.config.index} cd_run="{run}" ({spl})')
-        return len(rows) > 0
+        return len(self.client.search_run(run, spl)) > 0
 
 
 class OpenSearchEngine:

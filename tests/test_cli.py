@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from clouddetect import cli, sigma
 from clouddetect.cli import main
 from clouddetect.manifest import load
 
@@ -46,6 +47,17 @@ def test_convert_single_backend(capsys: pytest.CaptureFixture[str]) -> None:
 def test_convert_unknown_id_returns_2(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["convert", "no-such-detection"]) == 2
     assert "no detection with id" in capsys.readouterr().err
+
+
+def test_validate_reports_a_failing_conversion(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def boom(_det: object) -> tuple[str, str]:
+        raise sigma.ConversionError("rule is broken")
+
+    monkeypatch.setattr(cli, "_convert_both", boom)
+    assert main(["validate"]) == 1
+    assert "FAIL" in capsys.readouterr().err
 
 
 def test_attack_prints_markdown(capsys: pytest.CaptureFixture[str]) -> None:

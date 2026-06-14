@@ -46,5 +46,25 @@
     "eventType": "AwsApiCall",
     "managementEvent": true,
     "recipientAccountId": "111122223333"
+  },
+  {
+    "eventVersion": "1.08",
+    "userIdentity": {
+      "type": "Root",
+      "principalId": "111122223333",
+      "arn": "arn:aws:iam::111122223333:root",
+      "accountId": "111122223333"
+    },
+    "eventTime": "2026-06-12T00:00:09Z",
+    "eventSource": "health.amazonaws.com",
+    "eventName": "AWSHealthEvent",
+    "awsRegion": "us-east-1",
+    "requestParameters": null,
+    "responseElements": null,
+    "eventID": "d1e2f3a4-cccc-dddd-eeee-890abcdef012",
+    "readOnly": false,
+    "eventType": "AwsServiceEvent",
+    "managementEvent": true,
+    "recipientAccountId": "111122223333"
   }
 ]

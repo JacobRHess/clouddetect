@@ -97,3 +97,15 @@ def test_needs_both_alert_and_clean(tmp_path: Path) -> None:
 def test_duplicate_ids_rejected(tmp_path: Path) -> None:
     with pytest.raises(ManifestError, match="duplicate detection id"):
         load(_write(tmp_path, {"detections": [_valid_detection(), _valid_detection()]}))
+
+
+def test_fixtures_must_be_a_non_empty_list(tmp_path: Path) -> None:
+    det = _valid_detection()
+    det["fixtures"] = {}
+    with pytest.raises(ManifestError, match="non-empty list"):
+        load(_write(tmp_path, {"detections": [det]}))
+
+
+def test_missing_manifest_file_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(ManifestError, match="manifest not found"):
+        load(tmp_path / "does_not_exist.yaml")

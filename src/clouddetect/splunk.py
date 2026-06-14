@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from dataclasses import dataclass, field
 from typing import Any
@@ -21,6 +22,11 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 _DEV_HEC_TOKEN = "00000000-0000-0000-0000-000000000000"  # noqa: S105  # nosec B105
+
+# The per-ingestion isolation marker is always a uuid4 hex string. Enforcing the
+# shape at the query boundary keeps it from ever carrying SPL metacharacters, so
+# the f-string interpolation below cannot be turned into anything else.
+_RUN_RE = re.compile(r"\A[0-9a-f]{32}\Z")
 
 
 class SplunkError(RuntimeError):
@@ -71,6 +77,10 @@ class SplunkClient:
 
     def post_events(self, events: list[dict[str, Any]], sourcetype: str, run: str) -> int:
         """Send events to HEC, tagging each with a per-run marker for isolation."""
+        if not events:
+            return 0
+        if not _RUN_RE.match(run):
+            raise SplunkError(f"invalid run token {run!r}")
         url = f"https://{self.config.host}:{self.config.hec_port}/services/collector/event"
         lines: list[str] = []
         for event in events:
@@ -89,6 +99,9 @@ class SplunkClient:
                 headers={"Authorization": f"Splunk {self.config.hec_token}"},
                 data="\n".join(lines),
                 timeout=self.config.timeout,
+                # This request carries the HEC token; never let a redirect carry
+                # it to another host.
+                allow_redirects=False,
             )
         except requests.RequestException as exc:
             raise SplunkError(f"HEC post failed: {exc}") from exc
@@ -113,6 +126,8 @@ class SplunkClient:
                     "count": 0,
                 },
                 timeout=self.config.timeout,
+                # Carries basic-auth credentials; do not follow redirects.
+                allow_redirects=False,
             )
         except requests.RequestException as exc:
             raise SplunkError(f"search failed: {exc}") from exc
@@ -125,10 +140,22 @@ class SplunkClient:
         rows = payload.get("results", []) if isinstance(payload, dict) else []
         return [row for row in rows if isinstance(row, dict)]
 
+    def _scope(self, run: str) -> str:
+        """The index + run predicate every per-run search is confined to."""
+        if not _RUN_RE.match(run):
+            raise SplunkError(f"invalid run token {run!r}")
+        return f'index={self.config.index} cd_run="{run}"'
+
+    def search_run(self, run: str, spl: str) -> list[dict[str, Any]]:
+        """Run a detection's SPL confined to a single ingestion run."""
+        return self.search(f"search {self._scope(run)} ({spl})")
+
     def count(self, run: str) -> int:
-        rows = self.search(f'search index={self.config.index} cd_run="{run}" | stats count')
+        # `| stats count` always returns exactly one row; an empty result means
+        # the search itself failed, which the caller must not read as "0 events".
+        rows = self.search(f"search {self._scope(run)} | stats count")
         if not rows:
-            return 0
+            raise SplunkError(f"count search for run {run} returned no rows")
         try:
             return int(rows[0].get("count", 0))
         except (ValueError, TypeError):
@@ -137,9 +164,21 @@ class SplunkClient:
     def wait_for_count(
         self, run: str, expected: int, timeout: float = 180.0, poll: float = 3.0
     ) -> None:
-        """Wait until at least `expected` events for this run are searchable."""
+        """Block until at least `expected` events for this run are searchable.
+
+        HEC accepts events before they are indexed, so the engine calls this
+        before running a detection. Raising on timeout is the whole point: a
+        silent return would let a slow or stuck index look exactly like a
+        detection that did not fire, turning a real miss into a false verdict.
+        """
         deadline = time.monotonic() + timeout
+        seen = 0
         while time.monotonic() < deadline:
-            if self.count(run) >= expected:
+            seen = self.count(run)
+            if seen >= expected:
                 return
             time.sleep(poll)
+        raise SplunkError(
+            f"only {seen}/{expected} events for run {run} became searchable "
+            f"within {timeout:.0f}s; the index did not catch up"
+        )

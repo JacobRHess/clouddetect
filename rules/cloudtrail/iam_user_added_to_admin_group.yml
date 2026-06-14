@@ -20,6 +20,9 @@ detection:
 falsepositives:
   - Onboarding an operator into an admin group through an approved access
     request. Scope out the known joiner-mover-leaver automation.
+  - The match is a substring on "Admin", so it also catches groups like
+    "ReadOnlyAdmins". Tune the group-name match to your tenant's naming, and
+    note it is case-sensitive on OpenSearch (keyword) but not on Splunk.
 level: high
 tags:
   - attack.privilege-escalation

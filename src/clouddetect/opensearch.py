@@ -14,11 +14,18 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from dataclasses import dataclass, field
 from typing import Any, ClassVar
 
 import requests
+
+# Every index this client touches is a throwaway `clouddetect-<uuid>` created
+# per replay. Enforcing that shape at the boundary keeps a stray `/`, `*`, `,`
+# or `..` from ever widening a bulk/count/DELETE past the one index that is the
+# isolation boundary.
+_INDEX_RE = re.compile(r"\Aclouddetect-[a-z0-9-]+\Z")
 
 
 class OpenSearchError(RuntimeError):
@@ -47,10 +54,20 @@ class OpenSearchClient:
     def _url(self, path: str) -> str:
         return f"{self.config.url.rstrip('/')}/{path.lstrip('/')}"
 
+    @staticmethod
+    def _check_index(index: str) -> None:
+        if not _INDEX_RE.match(index):
+            raise OpenSearchError(f"refusing to operate on unexpected index name {index!r}")
+
     def _request(self, method: str, path: str, **kwargs: Any) -> requests.Response:
         try:
             resp = self._session.request(
-                method, self._url(path), timeout=self.config.timeout, **kwargs
+                method,
+                self._url(path),
+                timeout=self.config.timeout,
+                # These calls may carry basic-auth; never follow a redirect with them.
+                allow_redirects=False,
+                **kwargs,
             )
         except requests.RequestException as exc:
             raise OpenSearchError(f"{method} {path} failed: {exc}") from exc
@@ -89,6 +106,9 @@ class OpenSearchClient:
 
     def index_events(self, index: str, events: list[dict[str, Any]]) -> int:
         """Bulk-index events into a fresh keyword-mapped index, refreshed for search."""
+        self._check_index(index)
+        if not events:
+            raise OpenSearchError("refusing to index an empty event list")
         self._request("DELETE", f"/{index}")  # best effort; ignore 404
         created = self._request("PUT", f"/{index}", json=self._MAPPING)
         if created.status_code not in (200, 201):
@@ -115,6 +135,7 @@ class OpenSearchClient:
 
     def count(self, index: str, lucene: str) -> int:
         """Count documents in `index` matching a Lucene query string."""
+        self._check_index(index)
         resp = self._request(
             "POST",
             f"/{index}/_count",
@@ -125,4 +146,5 @@ class OpenSearchClient:
         return int(resp.json().get("count", 0))
 
     def drop(self, index: str) -> None:
+        self._check_index(index)
         self._request("DELETE", f"/{index}")

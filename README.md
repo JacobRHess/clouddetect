@@ -41,10 +41,12 @@ rule's portability, and CI catches it.
 
 ## Coverage
 
-| Surface | Source | Examples |
+| Surface | Source | Detections |
 |---|---|---|
-| AWS control plane | CloudTrail | IAM privilege escalation, access-key persistence, CloudTrail tampering, S3 / snapshot exfil |
-| Identity | Okta System Log | MFA fatigue, impossible travel, factor reset, super-admin grant, password spray |
+| AWS control plane | CloudTrail | AdministratorAccess attachment, IAM user added to an admin group, console login profile created, CloudTrail logging disabled, AWS Config disabled, GuardDuty torn down, root account used, KMS key scheduled for deletion |
+| Identity | Okta System Log | API token created, MFA factor reset, Super Administrator granted |
+
+The full, always-current list is `docs/ATTACK.md`, generated from the manifest.
 
 Every detection is tagged to the MITRE ATT&CK Cloud matrix; `docs/ATTACK.md` and
 the ATT&CK Navigator layer are generated from the manifest, not hand-edited.
